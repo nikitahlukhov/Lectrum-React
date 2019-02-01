@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 //Components
+import { withProfile } from 'components/HOC/withProfile';
 import Post from 'components/Post';
 import Composer from 'components/Composer';
 import StatusBar from 'components/StatusBar';
@@ -10,16 +11,8 @@ import { getUniqueID, delay } from 'instruments';
 //Instruments
 import Styles from './styles.m.css';
 
+@withProfile
 export default class Feed extends Component {
-    constructor () {
-        super();
-
-        this._createPost = this._createPost.bind(this);
-        this._setPostsFetchingState = this._setPostsFetchingState.bind(this);  
-        this._likePost = this._likePost.bind(this);  
-        this._removePost = this._removePost.bind(this);
-    }
-
     state = {
         posts: [
             { id: '123', comment: 'Hi There!', created: 1548775740, likes: []}, 
@@ -28,13 +21,13 @@ export default class Feed extends Component {
         isPostsFetching: false,  
     };
 
-    _setPostsFetchingState (state) {
+    _setPostsFetchingState = (state) => {
         this.setState({
             isPostsFetching: state,
         })
     }
     
-    async _createPost (comment) {
+    _createPost = async (comment) => {
         this._setPostsFetchingState(true);
 
         const post = {
@@ -54,28 +47,19 @@ export default class Feed extends Component {
     }
 
 
-    async _removePost (id) {
+    _removePost = async (id) => {
         this._setPostsFetchingState(true);
         
         await delay (1200);
 
-        const removePost = this.state.posts.filter((post) => {
-            if (post.id !== id) {
-                return { post }
-            }
-
-        })
-        
-
-
-        this.setState({
-            posts: removePost,
+        this.setState(({ posts }) => ({
+            posts: posts.filter((post) => post.id !== id),
             isPostsFetching: false,
-        })
+        }));
 
     }
 
-    async _likePost (id) {
+    _likePost = async (id) => {
         const { currentUserFirstName, currentUserLastName } = this.props;
         this._setPostsFetchingState(true);
         
