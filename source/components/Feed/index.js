@@ -24,6 +24,7 @@ export default class Feed extends Component {
         const { currentUserFirstName, currentUserLastName } = this.props;
         
         this._fetchPosts();
+        
         socket.emit('join', GROUP_ID);
 
         socket.on('create', (postJSON)=> {
@@ -47,7 +48,21 @@ export default class Feed extends Component {
              `${meta.authorFirstName} ${meta.authorLastName}`
             ) {
                 this.setState(({ posts }) => ({
-                    posts: posts.filter( post => post.id !== removePost.id),
+                    posts: posts.filter( post => post.id !== removePost.id), 
+                }));    
+                
+            }
+
+        });
+
+        socket.on('like', (postJSON)=> {
+            const { data: likedPost, meta } = JSON.parse(postJSON);
+
+            if (`${currentUserFirstName} ${currentUserLastName}` !==
+             `${meta.authorFirstName} ${meta.authorLastName}`
+            ) {
+                this.setState(({ posts }) => ({
+                    posts: posts.map((post) => post.id === likedPost.id ? likedPost : post,),
                 }));    
                 
             }
@@ -58,6 +73,7 @@ export default class Feed extends Component {
     componentWillUnmount () {
         socket.removeListener('create');
         socket.removeListener('remove');
+        socket.removeListener('like');
     }
 
     _setPostsFetchingState = (state) => {
@@ -68,19 +84,20 @@ export default class Feed extends Component {
 
     _fetchPosts = async () => {
         this._setPostsFetchingState(true);
+        
 
         const response = await fetch (api, {
             method: 'GET',
-        }) 
+        });
 
         const { data: posts } = await response.json();
 
         this.setState({
             posts,
             isPostsFetching: false,
-        })
+        });
 
-    }
+    };
 
     _createPost = async (comment) => {
         this._setPostsFetchingState(true);
@@ -107,7 +124,7 @@ export default class Feed extends Component {
     _removePost = async (id) => {
         this._setPostsFetchingState(true);
 
-        const response = await fetch (`${api}/${id}`, {
+        await fetch (`${api}/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: TOKEN,
