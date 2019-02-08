@@ -190,7 +190,9 @@ export default class Feed extends Component {
                 <CSSTransition 
                     classNames = { {
                         enter: Styles.postInStart,
-                        exit: Styles.postInEnd,
+                        enterActive: Styles.postInEnd,
+                        exit: Styles.postOutStart,
+                        exitActive: Styles.postOutEnd
                     } }  
                     key = { post.id } 
                     timeout = { {
