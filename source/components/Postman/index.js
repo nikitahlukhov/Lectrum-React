@@ -14,4 +14,4 @@ const Postman = (props) => {
     )
 }
 
-export default withProfile(Postman);
+export default withProfile(Postman)

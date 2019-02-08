@@ -161,11 +161,25 @@ export default class Feed extends Component {
 
     }
 
-    _animateComposerEnter = (composer) => {
+    _animatedComposerEnter = (composer) => {
         fromTo(composer,
             1,
             { opacity: 0 , rotationX: 50 }, 
             { opacity: 1, rotationX: 0 });
+    };
+
+    _animatedPostmanEnter = (postman) => {
+        fromTo(postman,
+            1,
+            { opacity: 0 , x: +500 }, 
+            { opacity: 1, x: 0 });
+    };
+
+    _animatedPostmanExit = (postman) => {
+        fromTo(postman,
+            1,
+            { opacity: 1 , x: 0 }, 
+            { opacity: 0, x: +300 });
     };
 
     render () {
@@ -192,10 +206,17 @@ export default class Feed extends Component {
                     in
                     appear
                     timeout = { 4000 }
-                    onEnter = { this._animateComposerEnter }>
+                    onEnter = { this._animatedComposerEnter }>
                     <Composer _createPost = { this._createPost }/>
                 </Transition>
-                <Postman/>
+                <Transition
+                    in
+                    appear
+                    timeout = { 4000 }
+                    onEntering = { this._animatedPostmanEnter }
+                    onEntered = { this._animatedPostmanExit }>
+                    <Postman/>
+                </Transition>
                 {postsJSX}
             </section>
         );
