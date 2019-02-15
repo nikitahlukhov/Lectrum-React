@@ -11,6 +11,7 @@ import StatusBar from 'components/StatusBar';
 import Spinner from 'components/Spinner';
 import Catcher from 'components/Catcher';
 import Postman from 'components/Postman';
+import Counter from 'components/Counter';
 
 //Instruments
 import Styles from './styles.m.css';
@@ -171,7 +172,7 @@ export default class Feed extends Component {
     _animatedPostmanEnter = (postman) => {
         fromTo(postman,
             1,
-            { opacity: 0 , x: +500 }, 
+            { opacity: 0 , x: 500 }, 
             { opacity: 1, x: 0 });
     };
 
@@ -179,7 +180,7 @@ export default class Feed extends Component {
         fromTo(postman,
             1,
             { opacity: 1 , x: 0 }, 
-            { opacity: 0, x: +300 });
+            { opacity: 0, x: 300 });
     };
 
     render () {
@@ -221,6 +222,7 @@ export default class Feed extends Component {
                     onEnter = { this._animatedComposerEnter }>
                     <Composer _createPost = { this._createPost }/>
                 </Transition>
+                <Counter count = { postsJSX.length }/>
                 <Transition
                     in
                     appear
