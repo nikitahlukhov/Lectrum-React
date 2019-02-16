@@ -1,11 +1,8 @@
 /* eslint-disable jest/lowercase-name */
 //Core
 import React from 'react';
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { mount } from 'enzyme';
 import { Composer } from './';
-
-configure({ adapter: new Adapter() });
 
 const props = {
     _createPost: jest.fn(),
@@ -22,6 +19,9 @@ const updatedState = {
 };
 
 const result = mount(<Composer { ...props } />);
+
+const _submitCommentSpy = jest.spyOn(result.instance(), '_submitComment');
+const _handleFormSubmitSpy = jest.spyOn(result.instance(), '_handleFormSubmit')
 
 describe('Composer component:', () => {
     test('should have 1 <section> element', () => {
@@ -77,5 +77,19 @@ describe('Composer component:', () => {
 
         expect(result.find('textarea').text()).toBe(comment);
         expect(result.state()).toEqual(updatedState);
+    })
+
+    test('sholud handle form <submit> event', () => {
+        result.find('form').simulate('submit')
+        expect(result.state()).toEqual(initialState);
+    })
+
+    test('_createPost prop should be invoked once after form submission', () => {
+        expect(props._createPost).toHaveBeenCalledTimes(1);
+    })
+
+    test('_submitComment and _handleFormSubmit class methods should be invoked once after form is submitted', () => {
+        expect(_submitCommentSpy).toHaveBeenCalledTimes(1);
+        expect(_handleFormSubmitSpy).toHaveBeenCalledTimes(1);
     })
 });
