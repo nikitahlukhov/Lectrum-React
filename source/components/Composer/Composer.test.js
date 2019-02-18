@@ -6,6 +6,8 @@ import { Composer } from './';
 
 const props = {
     _createPost: jest.fn(),
+    avatar: 'string',
+    currentUserFirstName: 'liza',
 };
 
 const comment = 'Merry christmas!';
@@ -21,7 +23,7 @@ const updatedState = {
 const result = mount(<Composer { ...props } />);
 
 const _submitCommentSpy = jest.spyOn(result.instance(), '_submitComment');
-const _handleFormSubmitSpy = jest.spyOn(result.instance(), '_handleFormSubmit')
+const _handleFormSubmitSpy = jest.spyOn(result.instance(), '_handleFormSubmit');
 
 describe('Composer component:', () => {
     test('should have 1 <section> element', () => {
@@ -61,14 +63,14 @@ describe('Composer component:', () => {
         expect(result.find('textarea').text()).toBe(comment);
 
         result.setState({
-            comment:'',
+            comment: '',
         });
 
         expect(result.state()).toEqual(initialState);
         expect(result.find('textarea').text()).toBe('');
     });
 
-    test('sholud handle textarea <change> event', () => {
+    test('should handle textarea <change> event', () => {
         result.find('textarea').simulate('change', {
             target:  {
                 value: comment,
@@ -79,7 +81,7 @@ describe('Composer component:', () => {
         expect(result.state()).toEqual(updatedState);
     })
 
-    test('sholud handle form <submit> event', () => {
+    test('should handle form <submit> event', () => {
         result.find('form').simulate('submit')
         expect(result.state()).toEqual(initialState);
     })
@@ -92,4 +94,26 @@ describe('Composer component:', () => {
         expect(_submitCommentSpy).toHaveBeenCalledTimes(1);
         expect(_handleFormSubmitSpy).toHaveBeenCalledTimes(1);
     })
+
+    test('avatar prop should be string', () => {
+        expect(typeof props.avatar).toBe('string');
+    })
+
+    test('currentUserFirstName prop should be string', () => {
+        expect(typeof props.currentUserFirstName).toBe('string');
+    })
+
+    test('should handle form _submitOnEnter event', () => {
+        result.find('textarea').simulate('keypress')
+        expect(result.state()).toEqual(initialState);
+    })
+
+    test('should update comment', () => {
+        result.find('textarea').simulate('change', {
+            target: {
+                value: 'input',
+            }
+        });              
+    })
+    
 });
