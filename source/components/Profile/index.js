@@ -10,10 +10,9 @@ import Styles from './styles.m.css';
 
 @withProfile
 export default class Feed extends Component {
-    
     render () {
         const { currentUserFirstName, currentUserLastName, avatar } = this.props;
-
+         
         return (
             <section className = { Styles.profile }>
                 <h1>
@@ -21,6 +20,7 @@ export default class Feed extends Component {
                 </h1>
                 <img src = { avatar } />
             </section>
-        );
+        ); 
+        
     }
 }

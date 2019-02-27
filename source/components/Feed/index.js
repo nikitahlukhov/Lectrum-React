@@ -183,7 +183,7 @@ export default class Feed extends Component {
     };
 
     render () {
-        const { posts,  isPostsFetching } = this.state;
+        const { posts,  isPostsFetching, isLoggedIn } = this.state;
 
         const postsJSX = posts.map((post) => {
             return (
